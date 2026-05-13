@@ -11,9 +11,9 @@
 </head>
 <body>
     <div class="app-container">
-        <header style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <img src="logo.png" alt="Golf Santa Fé Logo" style="height: 50px; border-radius: 8px;">
+        <header class="main-header">
+            <div class="logo-title-container">
+                <img src="logo.png" alt="Golf Santa Fé Logo" class="app-logo">
                 <h1>Gestão de Etapas - Golf Santa Fé</h1>
             </div>
             <div class="date-container">
@@ -56,7 +56,7 @@
             <section id="results-section" class="results-section glass-panel hidden">
                 <div class="results-header">
                     <h2>Resultados Finais</h2>
-                    <div style="display: flex; gap: 10px;">
+                    <div class="results-actions">
                         <button id="export-csv-btn" class="btn secondary-btn" style="color: white; border-color: var(--secondary-color);">Exportar CSV NDB</button>
                         <button id="export-pdf-btn" class="btn export-btn">Exportar PDF</button>
                     </div>

@@ -35,12 +35,23 @@ body {
     gap: 2rem;
 }
 
-header {
+.main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--glass-border);
+}
+
+.logo-title-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.app-logo {
+    height: 50px;
+    border-radius: 8px;
 }
 
 h1 {
@@ -217,6 +228,14 @@ input[type="number"] {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.results-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .pdf-export-mode {
@@ -249,4 +268,38 @@ input[type="number"] {
 .html2pdf__page-break {
     page-break-before: always;
     margin-top: 20px;
+}
+
+/* Responsividade para Celulares */
+@media (max-width: 768px) {
+    .main-header, .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .logo-title-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .results-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .results-actions .btn {
+        flex: 1;
+        text-align: center;
+        min-width: 140px;
+    }
+
+    .actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .actions .btn {
+        width: 100%;
+    }
 }
