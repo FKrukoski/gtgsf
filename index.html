@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneio de Golfe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- html2pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <img src="logo.png" alt="Golf Santa Fé Logo" style="height: 50px; border-radius: 8px;">
+                <h1>Gestão de Etapas - Golf Santa Fé</h1>
+            </div>
+            <div class="date-container">
+                <label for="event-date">Data do Evento:</label>
+                <input type="date" id="event-date" class="glass-input">
+            </div>
+        </header>
+
+        <main>
+            <section class="entry-section glass-panel">
+                <div class="table-container">
+                    <table id="entry-table">
+                        <thead>
+                            <tr>
+                                <th>Nome / Apelido</th>
+                                <th>HC</th>
+                                <th>Cat</th>
+                                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>
+                                <th class="sum-header">S1</th>
+                                <th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th>
+                                <th class="sum-header">S2</th>
+                                <th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th>
+                                <th class="sum-header">S3</th>
+                                <th class="sum-header">Gross</th>
+                                <th class="sum-header">Net</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="entry-body">
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="actions">
+                    <button id="add-row-btn" class="btn secondary-btn">+ Adicionar Jogador</button>
+                    <button id="calculate-btn" class="btn primary-btn">Confirmar / Calcular</button>
+                </div>
+            </section>
+
+            <section id="results-section" class="results-section glass-panel hidden">
+                <div class="results-header">
+                    <h2>Resultados Finais</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="export-csv-btn" class="btn secondary-btn" style="color: white; border-color: var(--secondary-color);">Exportar CSV NDB</button>
+                        <button id="export-pdf-btn" class="btn export-btn">Exportar PDF</button>
+                    </div>
+                </div>
+                <div id="pdf-content">
+                    <div id="pdf-header" class="hidden" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <img src="logo.png" alt="Golf Santa Fé Logo" style="height: 60px;">
+                        <div>
+                            <h3 style="margin: 0;">Gestão de Etapas - Golf Santa Fé - Resultados Finais</h3>
+                            <p id="pdf-date-display" style="margin: 5px 0 0 0;"></p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="results-table">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Nome</th>
+                                    <th>Cat</th>
+                                    <th>Gross</th>
+                                    <th>Net</th>
+                                    <th>Net Double Bogey</th>
+                                </tr>
+                            </thead>
+                            <tbody id="results-body">
+                                <!-- Results injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Page 2 for Detailed Results in PDF -->
+                    <div class="html2pdf__page-break"></div>
+                    <div id="pdf-detailed-section" class="hidden">
+                        <div class="results-header" style="margin-top: 20px;">
+                            <h3>Resultados Detalhados por Buraco</h3>
+                        </div>
+                        <div class="table-container">
+                            <table id="detailed-results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>HC</th>
+                                        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>S1</th>
+                                        <th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>S2</th>
+                                        <th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>S3</th>
+                                        <th>Gross</th><th>Net</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detailed-results-body">
+                                    <!-- Detailed results injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
