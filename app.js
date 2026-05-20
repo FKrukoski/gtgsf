@@ -393,15 +393,17 @@ document.addEventListener('DOMContentLoaded', () => {
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
         };
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            document.body.classList.remove('pdf-export-mode');
-            pdfHeaderResult.classList.add('hidden');
-        }).catch(err => {
-            console.error("Erro ao gerar PDF:", err);
-            alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
-            document.body.classList.remove('pdf-export-mode');
-            pdfHeaderResult.classList.add('hidden');
-        });
+        setTimeout(() => {
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.body.classList.remove('pdf-export-mode');
+                pdfHeaderResult.classList.add('hidden');
+            }).catch(err => {
+                console.error("Erro ao gerar PDF:", err);
+                alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
+                document.body.classList.remove('pdf-export-mode');
+                pdfHeaderResult.classList.add('hidden');
+            });
+        }, 300);
     }
 
     function exportDetailToPDF() {
@@ -424,17 +426,19 @@ document.addEventListener('DOMContentLoaded', () => {
             pagebreak:    { mode: ['css', 'legacy'] }
         };
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            document.body.classList.remove('pdf-export-mode');
-            element.classList.add('hidden');
-            pdfHeaderDetail.classList.add('hidden');
-        }).catch(err => {
-            console.error("Erro ao gerar PDF:", err);
-            alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
-            document.body.classList.remove('pdf-export-mode');
-            element.classList.add('hidden');
-            pdfHeaderDetail.classList.add('hidden');
-        });
+        setTimeout(() => {
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.body.classList.remove('pdf-export-mode');
+                element.classList.add('hidden');
+                pdfHeaderDetail.classList.add('hidden');
+            }).catch(err => {
+                console.error("Erro ao gerar PDF:", err);
+                alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
+                document.body.classList.remove('pdf-export-mode');
+                element.classList.add('hidden');
+                pdfHeaderDetail.classList.add('hidden');
+            });
+        }, 300);
     }
 
     function exportToCSV() {
@@ -460,7 +464,14 @@ document.addEventListener('DOMContentLoaded', () => {
         link.setAttribute("href", url);
         link.setAttribute("download", `NDB_${formattedDate}.csv`);
         document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        
+        // Small delay to ensure the DOM is ready for the click event
+        setTimeout(() => {
+            link.click();
+            setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }, 50);
     }
 });
