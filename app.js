@@ -4,11 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const calculateBtn = document.getElementById('calculate-btn');
     const resultsSection = document.getElementById('results-section');
     const resultsBody = document.getElementById('results-body');
-    const exportPdfBtn = document.getElementById('export-pdf-btn');
+    const exportPdfResultBtn = document.getElementById('export-pdf-result-btn');
+    const exportPdfDetailBtn = document.getElementById('export-pdf-detail-btn');
     const exportCsvBtn = document.getElementById('export-csv-btn');
-    const pdfDateDisplay = document.getElementById('pdf-date-display');
+    const pdfDateDisplayResult = document.getElementById('pdf-date-display-result');
+    const pdfDateDisplayDetail = document.getElementById('pdf-date-display-detail');
     const eventDateInput = document.getElementById('event-date');
-    const pdfHeader = document.getElementById('pdf-header');
+    const pdfHeaderResult = document.getElementById('pdf-header-result');
+    const pdfHeaderDetail = document.getElementById('pdf-header-detail');
 
     let rowCount = 0;
     let currentResults = [];
@@ -23,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addRowBtn.addEventListener('click', addRow);
     calculateBtn.addEventListener('click', calculateResults);
-    exportPdfBtn.addEventListener('click', exportToPDF);
+    exportPdfResultBtn.addEventListener('click', exportResultToPDF);
+    exportPdfDetailBtn.addEventListener('click', exportDetailToPDF);
     exportCsvBtn.addEventListener('click', exportToCSV);
 
     // Set today's date by default
@@ -371,22 +375,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function exportToPDF() {
-        const element = document.getElementById('pdf-content');
-        const detailedSection = document.getElementById('pdf-detailed-section');
+    function exportResultToPDF() {
+        const element = document.getElementById('pdf-content-result');
         
-        // Prepare PDF
         document.body.classList.add('pdf-export-mode');
-        pdfHeader.classList.remove('hidden');
-        detailedSection.classList.remove('hidden');
+        pdfHeaderResult.classList.remove('hidden');
         
         const dateStr = eventDateInput.value;
         const formattedDate = dateStr ? dateStr.split('-').reverse().join('/') : 'Data não informada';
-        pdfDateDisplay.textContent = 'Data do Evento: ' + formattedDate;
+        pdfDateDisplayResult.textContent = 'Data do Evento: ' + formattedDate;
 
         const opt = {
-            margin:       10,
+            margin:       0,
             filename:     'Resultados_Torneio_Golfe.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            document.body.classList.remove('pdf-export-mode');
+            pdfHeaderResult.classList.add('hidden');
+        }).catch(err => {
+            console.error("Erro ao gerar PDF:", err);
+            alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
+            document.body.classList.remove('pdf-export-mode');
+            pdfHeaderResult.classList.add('hidden');
+        });
+    }
+
+    function exportDetailToPDF() {
+        const element = document.getElementById('pdf-detailed-section');
+        
+        document.body.classList.add('pdf-export-mode');
+        element.classList.remove('hidden');
+        pdfHeaderDetail.classList.remove('hidden');
+        
+        const dateStr = eventDateInput.value;
+        const formattedDate = dateStr ? dateStr.split('-').reverse().join('/') : 'Data não informada';
+        pdfDateDisplayDetail.textContent = 'Data do Evento: ' + formattedDate;
+
+        const opt = {
+            margin:       0,
+            filename:     'Detalhes_Torneio_Golfe.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' },
@@ -394,16 +425,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         html2pdf().set(opt).from(element).save().then(() => {
-            // Restore styles
             document.body.classList.remove('pdf-export-mode');
-            pdfHeader.classList.add('hidden');
-            detailedSection.classList.add('hidden');
+            element.classList.add('hidden');
+            pdfHeaderDetail.classList.add('hidden');
         }).catch(err => {
             console.error("Erro ao gerar PDF:", err);
             alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
             document.body.classList.remove('pdf-export-mode');
-            pdfHeader.classList.add('hidden');
-            detailedSection.classList.add('hidden');
+            element.classList.add('hidden');
+            pdfHeaderDetail.classList.add('hidden');
         });
     }
 

@@ -56,17 +56,19 @@
             <section id="results-section" class="results-section glass-panel hidden">
                 <div class="results-header">
                     <h2>Resultados Finais</h2>
-                    <div class="results-actions">
-                        <button id="export-csv-btn" class="btn secondary-btn" style="color: white; border-color: var(--secondary-color);">Exportar CSV NDB</button>
-                        <button id="export-pdf-btn" class="btn export-btn">Exportar PDF</button>
+                    <div class="results-actions" style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-weight: 600;">Exportar:</span>
+                        <button id="export-csv-btn" class="btn secondary-btn" style="color: white; border-color: var(--secondary-color);">CSV</button>
+                        <button id="export-pdf-result-btn" class="btn export-btn">Resultado</button>
+                        <button id="export-pdf-detail-btn" class="btn export-btn">Detalhes</button>
                     </div>
                 </div>
-                <div id="pdf-content">
-                    <div id="pdf-header" class="hidden" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                        <img src="logo.png" alt="Golf Santa Fé Logo" style="height: 60px;">
+                <div id="pdf-content-result">
+                    <div id="pdf-header-result" class="hidden" style="display: flex; align-items: flex-start; gap: 15px; margin: 0; padding: 10px;">
+                        <img src="logo.png" alt="Golf Santa Fé Logo" style="height: 60px; margin: 0;">
                         <div>
-                            <h3 style="margin: 0;">Gestão de Etapas - Golf Santa Fé - Resultados Finais</h3>
-                            <p id="pdf-date-display" style="margin: 5px 0 0 0;"></p>
+                            <h3 style="margin: 0; padding-top: 10px;">Gestão de Etapas - Golf Santa Fé - Resultados Finais</h3>
+                            <p id="pdf-date-display-result" style="margin: 5px 0 0 0;"></p>
                         </div>
                     </div>
                     <div class="table-container">
@@ -86,12 +88,16 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
 
-                    <!-- Page 2 for Detailed Results in PDF -->
-                    <div class="html2pdf__page-break"></div>
-                    <div id="pdf-detailed-section" class="hidden">
-                        <div class="results-header" style="margin-top: 20px;">
-                            <h3>Resultados Detalhados por Buraco</h3>
+                <!-- Detailed Results for PDF Export -->
+                <div id="pdf-detailed-section" class="hidden">
+                        <div id="pdf-header-detail" class="hidden" style="display: flex; align-items: flex-start; gap: 15px; margin: 0; padding: 10px;">
+                            <img src="logo.png" alt="Golf Santa Fé Logo" style="height: 60px; margin: 0;">
+                            <div>
+                                <h3 style="margin: 0; padding-top: 10px;">Gestão de Etapas - Golf Santa Fé - Resultados Detalhados</h3>
+                                <p id="pdf-date-display-detail" style="margin: 5px 0 0 0;"></p>
+                            </div>
                         </div>
                         <div class="table-container">
                             <table id="detailed-results-table">
