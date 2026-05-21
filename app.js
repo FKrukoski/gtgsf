@@ -377,68 +377,125 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function exportResultToPDF() {
         const element = document.getElementById('pdf-content-result');
-        
-        document.body.classList.add('pdf-export-mode');
-        pdfHeaderResult.classList.remove('hidden');
-        
+    function exportResultToPDF() {
+        if (!currentResults || currentResults.length === 0) {
+            alert("Calcule os resultados primeiro!");
+            return;
+        }
+
         const dateStr = eventDateInput.value;
         const formattedDate = dateStr ? dateStr.split('-').reverse().join('/') : 'Data não informada';
-        pdfDateDisplayResult.textContent = 'Data do Evento: ' + formattedDate;
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'landscape' });
 
-        const opt = {
-            margin:       0,
-            filename:     'Resultados_Torneio_Golfe.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
-        };
+        try {
+            const logo = document.querySelector('.app-logo');
+            if (logo) {
+                // Tenta desenhar a logo. Em modo local file:// pode dar erro de CORS em alguns navegadores.
+                doc.addImage(logo, 'PNG', 14, 10, 20, 20);
+            }
+        } catch(e) { console.warn("Logo não pôde ser adicionada", e); }
 
-        setTimeout(() => {
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.body.classList.remove('pdf-export-mode');
-                pdfHeaderResult.classList.add('hidden');
-            }).catch(err => {
-                console.error("Erro ao gerar PDF:", err);
-                alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
-                document.body.classList.remove('pdf-export-mode');
-                pdfHeaderResult.classList.add('hidden');
-            });
-        }, 300);
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text("Gestão de Etapas - Golf Santa Fé - Resultados Finais", 38, 18);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(100, 100, 100);
+        doc.text("Data do Evento: " + formattedDate, 38, 25);
+
+        const tableColumn = ["Pos", "Nome", "Cat", "Gross", "Net", "Net Double Bogey"];
+        const tableRows = [];
+
+        currentResults.forEach((res, index) => {
+            tableRows.push([
+                index + 1,
+                res.name,
+                res.cat,
+                res.gross,
+                res.net,
+                res.netDoubleBogeyTotal
+            ]);
+        });
+
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: 35,
+            theme: 'striped',
+            headStyles: { fillColor: [16, 185, 129] },
+            styles: { fontSize: 10, cellPadding: 3, halign: 'center' },
+            columnStyles: { 1: { halign: 'left' } }
+        });
+
+        doc.save('Resultados_Torneio_Golfe.pdf');
     }
 
     function exportDetailToPDF() {
-        const element = document.getElementById('pdf-detailed-section');
-        
-        document.body.classList.add('pdf-export-mode');
-        element.classList.remove('hidden');
-        pdfHeaderDetail.classList.remove('hidden');
-        
+        if (!currentResults || currentResults.length === 0) {
+            alert("Calcule os resultados primeiro!");
+            return;
+        }
+
         const dateStr = eventDateInput.value;
         const formattedDate = dateStr ? dateStr.split('-').reverse().join('/') : 'Data não informada';
-        pdfDateDisplayDetail.textContent = 'Data do Evento: ' + formattedDate;
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'landscape' });
 
-        const opt = {
-            margin:       0,
-            filename:     'Detalhes_Torneio_Golfe.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' },
-            pagebreak:    { mode: ['css', 'legacy'] }
-        };
+        try {
+            const logo = document.querySelector('.app-logo');
+            if (logo) {
+                doc.addImage(logo, 'PNG', 14, 10, 20, 20);
+            }
+        } catch(e) { console.warn("Logo não pôde ser adicionada", e); }
 
-        setTimeout(() => {
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.body.classList.remove('pdf-export-mode');
-                element.classList.add('hidden');
-                pdfHeaderDetail.classList.add('hidden');
-            }).catch(err => {
-                console.error("Erro ao gerar PDF:", err);
-                alert("Erro ao gerar o PDF. A logo local pode estar bloqueando (CORS).");
-                document.body.classList.remove('pdf-export-mode');
-                element.classList.add('hidden');
-                pdfHeaderDetail.classList.add('hidden');
-            });
-        }, 300);
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text("Gestão de Etapas - Golf Santa Fé - Resultados Detalhados", 38, 18);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(100, 100, 100);
+        doc.text("Data do Evento: " + formattedDate, 38, 25);
+
+        const tableColumn = [
+            "Nome", "HC", 
+            "1","2","3","4","5","6","S1",
+            "7","8","9","10","11","12","S2",
+            "13","14","15","16","17","18","S3",
+            "Gross", "Net"
+        ];
+        const tableRows = [];
+
+        currentResults.forEach(res => {
+            tableRows.push([
+                res.name, res.hc,
+                res.holes[0], res.holes[1], res.holes[2], res.holes[3], res.holes[4], res.holes[5], res.sum1,
+                res.holes[6], res.holes[7], res.holes[8], res.holes[9], res.holes[10], res.holes[11], res.sum2,
+                res.holes[12], res.holes[13], res.holes[14], res.holes[15], res.holes[16], res.holes[17], res.sum3,
+                res.gross, res.net
+            ]);
+        });
+
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: 35,
+            theme: 'striped',
+            headStyles: { fillColor: [16, 185, 129], fontSize: 8, halign: 'center', cellPadding: 1 },
+            styles: { fontSize: 8, cellPadding: 1.5, halign: 'center' },
+            columnStyles: { 
+                0: { halign: 'left', cellWidth: 30 },
+                8: { fontStyle: 'bold' },
+                15: { fontStyle: 'bold' },
+                22: { fontStyle: 'bold' },
+                23: { fontStyle: 'bold' },
+                24: { fontStyle: 'bold', textColor: [16, 185, 129] }
+            }
+        });
+
+        doc.save('Detalhes_Torneio_Golfe.pdf');
     }
 
     function exportToCSV() {
