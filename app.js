@@ -323,26 +323,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Identify Champions
-        let minGross = Infinity;
-        let grossChamp = null;
-        let cat1Champ = null;
-        let cat2Champ = null;
-
+        let grossChamp = results[0];
         results.forEach(res => {
-            if (res.gross < minGross) {
-                minGross = res.gross;
+            if (res.gross < grossChamp.gross) {
                 grossChamp = res;
             }
-            if (res.cat === 1 && !cat1Champ) {
-                cat1Champ = res;
-            }
-            if (res.cat === 2 && !cat2Champ) {
-                cat2Champ = res;
-            }
         });
-
         if (grossChamp) grossChamp.isGrossChamp = true;
+
+        let cat1Champ = results.find(res => res.cat === 1 && res !== grossChamp);
         if (cat1Champ) cat1Champ.isCat1Champ = true;
+
+        let cat2Champ = results.find(res => res.cat === 2 && res !== grossChamp);
         if (cat2Champ) cat2Champ.isCat2Champ = true;
 
         results.forEach(res => {
@@ -429,13 +421,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch(e) { console.warn("Logo não pôde ser adicionada", e); }
 
+        const pageWidth = doc.internal.pageSize.getWidth();
+        
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text("Gestão de Etapas - Golf Santa Fé - Resultados Finais", 38, 18);
+        doc.text("Gestão de Etapas - Golf Santa Fé - Resultados Finais", pageWidth / 2, 18, { align: 'center' });
         
         doc.setFontSize(11);
         doc.setTextColor(100, 100, 100);
-        doc.text("Data do Evento: " + formattedDate, 38, 25);
+        doc.text("Data do Evento: " + formattedDate, pageWidth / 2, 25, { align: 'center' });
 
         const tableColumn = ["Pos", "Nome", "Cat", "Gross", "Net", "Net Double Bogey"];
         const tableRows = [];
@@ -486,13 +480,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch(e) { console.warn("Logo não pôde ser adicionada", e); }
 
+        const pageWidth = doc.internal.pageSize.getWidth();
+
         doc.setFontSize(16);
         doc.setTextColor(0, 0, 0);
-        doc.text("Gestão de Etapas - Golf Santa Fé - Resultados Detalhados", 38, 18);
+        doc.text("Gestão de Etapas - Golf Santa Fé - Resultados Detalhados", pageWidth / 2, 18, { align: 'center' });
         
         doc.setFontSize(11);
         doc.setTextColor(100, 100, 100);
-        doc.text("Data do Evento: " + formattedDate, 38, 25);
+        doc.text("Data do Evento: " + formattedDate, pageWidth / 2, 25, { align: 'center' });
 
         const tableColumn = [
             "Nome", "HC", 
