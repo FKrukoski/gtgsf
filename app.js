@@ -339,9 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         results.forEach(res => {
             let badges = [];
-            if (res.isGrossChamp) badges.push("🏆 Melhor Gross");
-            if (res.isCat1Champ) badges.push("🏆 Campeão Cat 1");
-            if (res.isCat2Champ) badges.push("🏆 Campeão Cat 2");
+            if (res.isGrossChamp) badges.push("Melhor Gross");
+            if (res.isCat1Champ) badges.push("Campeão Cat 1");
+            if (res.isCat2Champ) badges.push("Campeão Cat 2");
             
             res.badgesStr = badges.length > 0 ? badges.join(' | ') : "";
         });
