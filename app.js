@@ -376,8 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function exportResultToPDF() {
-        const element = document.getElementById('pdf-content-result');
-    function exportResultToPDF() {
         if (!currentResults || currentResults.length === 0) {
             alert("Calcule os resultados primeiro!");
             return;
