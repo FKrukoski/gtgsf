@@ -322,6 +322,38 @@ document.addEventListener('DOMContentLoaded', () => {
             return a.net - b.net;
         });
 
+        // Identify Champions
+        let minGross = Infinity;
+        let grossChamp = null;
+        let cat1Champ = null;
+        let cat2Champ = null;
+
+        results.forEach(res => {
+            if (res.gross < minGross) {
+                minGross = res.gross;
+                grossChamp = res;
+            }
+            if (res.cat === 1 && !cat1Champ) {
+                cat1Champ = res;
+            }
+            if (res.cat === 2 && !cat2Champ) {
+                cat2Champ = res;
+            }
+        });
+
+        if (grossChamp) grossChamp.isGrossChamp = true;
+        if (cat1Champ) cat1Champ.isCat1Champ = true;
+        if (cat2Champ) cat2Champ.isCat2Champ = true;
+
+        results.forEach(res => {
+            let badges = [];
+            if (res.isGrossChamp) badges.push("🏆 Melhor Gross");
+            if (res.isCat1Champ) badges.push("🏆 Campeão Cat 1");
+            if (res.isCat2Champ) badges.push("🏆 Campeão Cat 2");
+            
+            res.badgesStr = badges.length > 0 ? badges.join(' | ') : "";
+        });
+
         currentResults = results;
         renderResults(results);
     }
@@ -333,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${index + 1}</td>
-                <td>${res.name}</td>
+                <td>${res.name}${res.badgesStr ? `<br><small style="color:var(--primary-color); font-weight:bold;">${res.badgesStr}</small>` : ''}</td>
                 <td>${res.cat}</td>
                 <td>${res.gross}</td>
                 <td><strong>${res.net}</strong></td>
@@ -356,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         results.forEach((res) => {
             const tr = document.createElement('tr');
             
-            let html = `<td>${res.name}</td><td>${res.hc}</td>`;
+            let html = `<td>${res.name}${res.badgesStr ? `<br><small style="color:var(--primary-color); font-weight:bold; font-size:0.75rem;">${res.badgesStr}</small>` : ''}</td><td>${res.hc}</td>`;
             
             for(let i=0; i<6; i++) html += `<td>${res.holes[i]}</td>`;
             html += `<td style="font-weight:bold;">${res.sum1}</td>`;
@@ -390,8 +422,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const logo = document.querySelector('.app-logo');
             if (logo) {
-                // Tenta desenhar a logo. Em modo local file:// pode dar erro de CORS em alguns navegadores.
-                doc.addImage(logo, 'PNG', 14, 10, 20, 20);
+                const ratio = logo.naturalWidth / logo.naturalHeight;
+                const height = 20;
+                const width = ratio ? (height * ratio) : 20;
+                doc.addImage(logo, 'PNG', 14, 10, width, height);
             }
         } catch(e) { console.warn("Logo não pôde ser adicionada", e); }
 
@@ -409,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentResults.forEach((res, index) => {
             tableRows.push([
                 index + 1,
-                res.name,
+                res.name + (res.badgesStr ? `\n${res.badgesStr}` : ''),
                 res.cat,
                 res.gross,
                 res.net,
@@ -445,7 +479,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const logo = document.querySelector('.app-logo');
             if (logo) {
-                doc.addImage(logo, 'PNG', 14, 10, 20, 20);
+                const ratio = logo.naturalWidth / logo.naturalHeight;
+                const height = 20;
+                const width = ratio ? (height * ratio) : 20;
+                doc.addImage(logo, 'PNG', 14, 10, width, height);
             }
         } catch(e) { console.warn("Logo não pôde ser adicionada", e); }
 
@@ -468,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentResults.forEach(res => {
             tableRows.push([
-                res.name, res.hc,
+                res.name + (res.badgesStr ? `\n${res.badgesStr}` : ''), res.hc,
                 res.holes[0], res.holes[1], res.holes[2], res.holes[3], res.holes[4], res.holes[5], res.sum1,
                 res.holes[6], res.holes[7], res.holes[8], res.holes[9], res.holes[10], res.holes[11], res.sum2,
                 res.holes[12], res.holes[13], res.holes[14], res.holes[15], res.holes[16], res.holes[17], res.sum3,
